@@ -140,6 +140,7 @@ var (
 	TokenTypesOfJoinMaker  = []TokenType{JOIN, INNER, OUTER, LEFT, RIGHT, NATURAL, CROSS}
 	TokenTypeOfTieClause   = []TokenType{UNION, INTERSECT, EXCEPT}
 	TokenTypeOfLimitClause = []TokenType{LIMIT, FETCH, OFFSET}
+	TokenOperatorKeywords  = []TokenType{AND, OR}
 )
 
 // IsJoinStart determines if ttype is included in TokenTypesOfJoinMaker
@@ -155,6 +156,15 @@ func (t Token) IsJoinStart() bool {
 // IsTieClauseStart determines if ttype is included in TokenTypesOfTieClause
 func (t Token) IsTieClauseStart() bool {
 	for _, v := range TokenTypeOfTieClause {
+		if t.Type == v {
+			return true
+		}
+	}
+	return false
+}
+
+func (t Token) IsOperatorKeyword() bool {
+	for _, v := range TokenOperatorKeywords {
 		if t.Type == v {
 			return true
 		}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 	"github.com/pkg/errors"
 )
 
@@ -25,6 +25,7 @@ func (s *Select) Reindent(buf *bytes.Buffer) error {
 	elements := separate(src)
 
 	for i, element := range elements {
+
 		switch v := element.(type) {
 		case lexer.Token, string:
 			if err := writeSelect(buf, element, s.IndentLevel); err != nil {

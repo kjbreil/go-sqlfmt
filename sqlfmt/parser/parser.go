@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
-	"github.com/kanmu/go-sqlfmt/sqlfmt/parser/group"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/parser/group"
 	"github.com/pkg/errors"
 )
 

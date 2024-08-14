@@ -3,7 +3,7 @@ package group
 import (
 	"bytes"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 // Having clause
@@ -20,9 +20,12 @@ func (h *Having) Reindent(buf *bytes.Buffer) error {
 	}
 	for _, el := range elements {
 		if token, ok := el.(lexer.Token); ok {
-			write(buf, token, h.IndentLevel)
+			writeWithCombiner(buf, token, h.IndentLevel)
 		} else {
-			el.Reindent(buf)
+			err = el.Reindent(buf)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

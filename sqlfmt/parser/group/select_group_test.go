@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 func TestReindentSelectGroup(t *testing.T) {
@@ -21,18 +21,30 @@ func TestReindentSelectGroup(t *testing.T) {
 				lexer.Token{Type: lexer.COMMA, Value: ","},
 				lexer.Token{Type: lexer.IDENT, Value: "age"},
 			},
-			want: "\nSELECT\n  name\n  , age",
+			want: "\nSELECT name\n  , age",
+		},
+		{
+			name: "normal case",
+			tokenSource: []Reindenter{
+				lexer.Token{Type: lexer.SELECT, Value: "SELECT"},
+				lexer.Token{Type: lexer.IDENT, Value: "TEST"},
+				lexer.Token{Type: lexer.COMMA, Value: ","},
+				lexer.Token{Type: lexer.IDENT, Value: "TEST2\r"},
+			},
+			want: "\nSELECT\n  TEST\n  , TEST2\r",
 		},
 	}
 	for _, tt := range tests {
-		buf := &bytes.Buffer{}
-		selectGroup := &Select{Element: tt.tokenSource}
+		t.Run(tt.name, func(t *testing.T) {
+			buf := &bytes.Buffer{}
+			selectGroup := &Select{Element: tt.tokenSource}
 
-		selectGroup.Reindent(buf)
-		got := buf.String()
-		if tt.want != got {
-			t.Errorf("want%#v, got %#v", tt.want, got)
-		}
+			selectGroup.Reindent(buf)
+			got := buf.String()
+			if tt.want != got {
+				t.Errorf("want%#v, got %#v", tt.want, got)
+			}
+		})
 	}
 }
 

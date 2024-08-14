@@ -3,7 +3,7 @@ package group
 import (
 	"bytes"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 // Where clause
@@ -20,11 +20,12 @@ func (w *Where) Reindent(buf *bytes.Buffer) error {
 	}
 	for _, el := range elements {
 		if token, ok := el.(lexer.Token); ok {
-			write(buf, token, w.IndentLevel)
+			writeWithCombiner(buf, token, w.IndentLevel)
 		} else {
 			el.Reindent(buf)
 		}
 	}
+
 	return nil
 }
 

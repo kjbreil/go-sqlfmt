@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/parser"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/parser/group"
 	"strings"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
-	"github.com/kanmu/go-sqlfmt/sqlfmt/parser"
-	"github.com/kanmu/go-sqlfmt/sqlfmt/parser/group"
 	"github.com/pkg/errors"
 )
 
@@ -34,7 +34,7 @@ func Format(src string, options *Options) (string, error) {
 	}
 
 	if !compare(src, res) {
-		return src, fmt.Errorf("the formatted statement has diffed from the source")
+		return res, fmt.Errorf("the formatted statement has diffed from the source")
 	}
 	return res, nil
 }

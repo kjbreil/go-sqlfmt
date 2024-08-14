@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 func TestReindentWhereGroup(t *testing.T) {
@@ -20,18 +20,26 @@ func TestReindentWhereGroup(t *testing.T) {
 				lexer.Token{Type: lexer.IDENT, Value: "something1"},
 				lexer.Token{Type: lexer.IDENT, Value: "="},
 				lexer.Token{Type: lexer.IDENT, Value: "something2"},
+				lexer.Token{Type: lexer.AND, Value: "AND"},
+				lexer.Token{Type: lexer.IDENT, Value: "something1"},
+				lexer.Token{Type: lexer.IDENT, Value: "="},
+				lexer.Token{Type: lexer.IDENT, Value: "something2"},
 			},
-			want: "\nWHERE something1 = something2",
+			want: "\nWHERE something1 = something2\n    AND something1 = something2",
 		},
 	}
 	for _, tt := range tests {
-		buf := &bytes.Buffer{}
-		whereGroup := &Where{Element: tt.tokenSource}
+		t.Run(tt.name, func(t *testing.T) {
 
-		whereGroup.Reindent(buf)
-		got := buf.String()
-		if tt.want != got {
-			t.Errorf("want%#v, got %#v", tt.want, got)
-		}
+			buf := &bytes.Buffer{}
+			whereGroup := &Where{Element: tt.tokenSource}
+
+			whereGroup.Reindent(buf)
+			got := buf.String()
+			if tt.want != got {
+				t.Errorf("want%#v, got %#v", tt.want, got)
+			}
+		})
+
 	}
 }

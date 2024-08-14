@@ -3,7 +3,7 @@ package group
 import (
 	"bytes"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 // Subquery group
@@ -20,7 +20,9 @@ func (s *Subquery) Reindent(buf *bytes.Buffer) error {
 	if err != nil {
 		return err
 	}
+
 	for _, el := range elements {
+
 		if token, ok := el.(lexer.Token); ok {
 			writeSubquery(buf, token, s.IndentLevel, s.ColumnCount, s.InColumnArea)
 		} else {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kanmu/go-sqlfmt/sqlfmt/lexer"
+	"github.com/kjbreil/go-sqlfmt/sqlfmt/lexer"
 )
 
 // Reindenter interface
@@ -42,6 +42,54 @@ func write(buf *bytes.Buffer, token lexer.Token, indent int) {
 	}
 }
 
+func writeWithCombiner(buf *bytes.Buffer, token lexer.Token, indent int) {
+	switch {
+	case token.IsOperatorKeyword():
+		buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, token.Value))
+	case token.IsNeedNewLineBefore():
+		buf.WriteString(fmt.Sprintf("%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), token.Value))
+	case token.Type == lexer.COMMA:
+		buf.WriteString(fmt.Sprintf("%s", token.Value))
+	case token.Type == lexer.DO:
+		buf.WriteString(fmt.Sprintf("%s%s%s", NewLine, token.Value, WhiteSpace))
+	case strings.HasPrefix(token.Value, "::"):
+		buf.WriteString(fmt.Sprintf("%s", token.Value))
+	case token.Type == lexer.WITH:
+		buf.WriteString(fmt.Sprintf("%s%s", NewLine, token.Value))
+	default:
+		buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, token.Value))
+	}
+}
+
+// func writeWithCombiner(buf *bytes.Buffer, v interface{}, indent int) error {
+// 	if token, ok := v.(lexer.Token); ok {
+// 		switch {
+// 		case token.IsNeedNewLineBefore():
+// 			buf.WriteString(fmt.Sprintf("%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), token.Value))
+// 		case token.IsOperatorKeyword():
+// 			buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, token.Value))
+// 		case token.Type == lexer.BY:
+// 			buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, token.Value))
+// 		case token.Type == lexer.COMMA:
+// 			buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, token.Value))
+// 		default:
+// 			return fmt.Errorf("can not reindent %#v", token.Value)
+// 		}
+// 	} else if str, ok := v.(string); ok {
+// 		str = strings.TrimRight(str, " ")
+// 		// if columnCount == 0 {
+// 		// 	buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, str))
+// 		// } else
+// 		if strings.HasPrefix(token.Value, "::") {
+// 			buf.WriteString(fmt.Sprintf("%s", str))
+// 		} else {
+// 			buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, str))
+// 		}
+// 		columnCount++
+// 	}
+// 	return nil
+// }
+
 func writeWithComma(buf *bytes.Buffer, v interface{}, indent int) error {
 	if token, ok := v.(lexer.Token); ok {
 		switch {
@@ -56,9 +104,10 @@ func writeWithComma(buf *bytes.Buffer, v interface{}, indent int) error {
 		}
 	} else if str, ok := v.(string); ok {
 		str = strings.TrimRight(str, " ")
-		if columnCount == 0 {
-			buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, str))
-		} else if strings.HasPrefix(token.Value, "::") {
+		// if columnCount == 0 {
+		// 	buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, str))
+		// } else
+		if strings.HasPrefix(token.Value, "::") {
 			buf.WriteString(fmt.Sprintf("%s", str))
 		} else {
 			buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, str))
@@ -86,7 +135,9 @@ func writeSelect(buf *bytes.Buffer, el interface{}, indent int) error {
 	} else if str, ok := el.(string); ok {
 		str = strings.Trim(str, WhiteSpace)
 		if columnCount == 0 {
-			buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, str))
+			// buf.WriteString(fmt.Sprintf("%s%s%s%s", NewLine, strings.Repeat(DoubleWhiteSpace, indent), DoubleWhiteSpace, str))
+			buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, str))
+
 		} else {
 			buf.WriteString(fmt.Sprintf("%s%s", WhiteSpace, str))
 		}

@@ -1,7 +1,7 @@
 # sqlfmt
 
 [![Build Status](https://travis-ci.org/kanmu/go-sqlfmt.svg?branch=master)](https://travis-ci.org/kanmu/go-sqlfmt)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kanmu/go-sqlfmt)](https://goreportcard.com/report/github.com/kanmu/go-sqlfmt)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kjbreil/go-sqlfmt)](https://goreportcard.com/report/github.com/kjbreil/go-sqlfmt)
 
 ## Description
 
@@ -174,7 +174,7 @@ run git clone and go build -o sqlfmt
 Thank you for thinking of contributing to the sqlfmt!
 Pull Requests are welcome!
 
-1. Fork ([https://github.com/kanmu/go-sqlfmt))
+1. Fork ([https://github.com/kjbreil/go-sqlfmt))
 2. Create a feature branch
 3. Commit your changes
 4. Rebase your local changes against the master branch
